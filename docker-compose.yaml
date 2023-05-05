@@ -1,0 +1,97 @@
+version: '3.1'
+
+services:
+  portainer:
+    image: portainer/portainer-ce:alpine
+    restart: always
+    ports:
+      - "9090:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/portainer:/data
+    networks:
+      - default
+
+  zk1:
+    image: zookeeper
+    container_name: zk1
+    restart: always
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=zk2:2888:3888;2181 server.3=zk3:2888:3888;2181
+    networks:
+      - default
+
+  zk2:
+    image: zookeeper
+    container_name: zk2
+    restart: always
+    ports:
+      - "2182:2181"
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zk1:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=zk3:2888:3888;2181
+    networks:
+      - default
+
+  zk3:
+    image: zookeeper
+    container_name: zk3
+    restart: always
+    ports:
+      - "2183:2181"
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zk1:2888:3888;2181 server.2=zk3:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
+    networks:
+      - default
+
+  ck1:
+    image: yandex/clickhouse-server
+    restart: always
+    container_name: ck1
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - ./conf/ck1/config.xml:/etc/clickhouse-server/config.xml:rw
+      - ./conf/ck1/metrika.xml:/etc/clickhouse-server/metrika.xml:rw
+      - ./conf/ck1/users.xml:/etc/clickhouse-server/users.xml:rw
+      - ./data/ck1:/var/lib/clickhouse:rw
+    networks:
+      - default
+
+  ck2:
+    image: yandex/clickhouse-server
+    restart: always
+    container_name: ck2
+    ports:
+      - "8124:8123"
+      - "9001:9000"
+    volumes:
+      - ./conf/ck2/config.xml:/etc/clickhouse-server/config.xml:rw
+      - ./conf/ck2/metrika.xml:/etc/clickhouse-server/metrika.xml:rw
+      - ./conf/ck2/users.xml:/etc/clickhouse-server/users.xml:rw
+      - ./data/ck2:/var/lib/clickhouse:rw
+    networks:
+      - default
+
+  ck3:
+    image: yandex/clickhouse-server
+    restart: always
+    container_name: ck3
+    ports:
+      - "8125:8123"
+      - "9002:9000"
+    volumes:
+      - ./conf/ck3/config.xml:/etc/clickhouse-server/config.xml:rw
+      - ./conf/ck3/metrika.xml:/etc/clickhouse-server/metrika.xml:rw
+      - ./conf/ck3/users.xml:/etc/clickhouse-server/users.xml:rw
+      - ./data/ck3:/var/lib/clickhouse:rw
+    networks:
+      - default
+
+networks:
+  default:
