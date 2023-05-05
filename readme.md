@@ -13,7 +13,7 @@ SELECT * from `system`.clusters c;
 #### 创建库
 ```
 CREATE database micro_scrm on cluster cluster_3s_1r;
-`` `
+```
 
 #### 创建本地表
 ```
