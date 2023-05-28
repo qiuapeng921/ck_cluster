@@ -82,7 +82,7 @@ INSERT INTO micro_scrm.member_departments_local
     updated_at,
     deleted_at 
     FROM
-mysql('140.143.67.38:3307', 'micro_scrm', 'member_departments', 'root', '19930921') WHERE id = 3442842692697600;
+mysql('localhost:3306', 'micro_scrm', 'member_departments', 'root', '123456') WHERE id = 3442842692697600;
 ```
 
 ### 同步mysql库到ck中
